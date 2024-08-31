@@ -1,0 +1,13 @@
+select tmp.project_id project_id, round(avg(tmp.experience_years),2) average_years from
+	(select p.*, e.experience_years from project p left join employee e on p.employee_id = e.employee_id) tmp
+group by tmp.project_id;
+
+
+
+-- no need of using subquery
+# Write your MySQL query statement below
+SELECT p.project_id, ROUND(AVG(e.experience_years),2) AS average_years
+FROM Project p 
+LEFT JOIN Employee e
+ON p.employee_id = e.employee_id
+GROUP BY p.project_id

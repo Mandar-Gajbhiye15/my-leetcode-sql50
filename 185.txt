@@ -1,0 +1,20 @@
+select e.*, d.name from employee e left join department d on e.departmentId = d.id;
+
+select x.Department Department, x.name Employee, x.salary Salary from
+	( select tmp.*,  dense_rank()
+	over ( partition by departmentId order by e.salary desc ) rnk from
+	( select e.*, d.name Department from employee e left join department d on e.departmentId = d.id ) tmp ) x
+where x.rnk < 4; 
+
+
+WITH RankedEmployees AS (
+    SELECT e.name AS Employee,
+           e.salary AS Salary,
+           d.name AS Department,
+           DENSE_RANK() OVER (PARTITION BY e.departmentId ORDER BY e.salary DESC) AS rnk
+    FROM employee e
+    LEFT JOIN department d ON e.departmentId = d.id
+)
+SELECT Department, Employee, Salary
+FROM RankedEmployees
+WHERE rnk < 4;
