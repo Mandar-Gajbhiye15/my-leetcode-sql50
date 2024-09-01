@@ -1,0 +1,24 @@
+select distinct r.contest_id, count(r.user_id) total
+	from users u join register r on r.user_id = u.user_id
+	group by r.contest_id;
+
+
+select distinct r.contest_id, round(( count(r.user_id) / count() ) * 100,2) percentage
+	from users u join register r on r.user_id = u.user_id
+	group by r.contest_id
+	order by percentage desc, r.contest_id asc;
+
+
+select tmp.contest_id, round((tmp.r1/tmp.u1)*100,2) percentage from 
+	( select * from
+	( select distinct contest_id, count(user_id) r1 from register group by contest_id ) t1
+	join 
+	( select count(user_id) u1 from users ) t2 ) tmp
+order by percentage desc, tmp.contest_id asc;
+
+
+SELECT contest_id,
+ROUND(COUNT(DISTINCT user_id) * 100 / (SELECT COUNT(user_id) FROM Users), 2) as percentage
+FROM Register
+GROUP BY contest_id
+ORDER BY percentage desc, contest_id
